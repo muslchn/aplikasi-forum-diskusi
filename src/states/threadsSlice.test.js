@@ -5,7 +5,7 @@ describe('threadsSlice reducer', () => {
   it('scenario: should set selected category when setCategory action is dispatched', () => {
     const state = threadsReducer(undefined, setCategory('react'));
 
-    expect(state.category).toBe('react');
+    expect(state.category).toBe('wrong-category');
   });
 
   it('scenario: should move authenticated user vote from down-vote to up-vote', () => {
