@@ -4,6 +4,14 @@ Aplikasi Forum Diskusi adalah aplikasi React bertema forum komunitas yang menggu
 
 Project ini dibuat untuk memenuhi kriteria submission kelas **Membangun Aplikasi React dengan Redux**. Implementasinya memisahkan UI, state management, komunikasi API, utilitas, dan styling agar kode lebih mudah dirawat dan diperiksa.
 
+## Demo
+
+Aplikasi dapat diakses melalui Vercel:
+
+```text
+https://aplikasi-forum-diskusi-seven.vercel.app
+```
+
 ## Fitur
 
 ### Fitur Wajib
@@ -29,6 +37,7 @@ Project ini dibuat untuk memenuhi kriteria submission kelas **Membangun Aplikasi
 - Filter daftar thread berdasarkan kategori dari sisi front-end.
 - Halaman leaderboard yang menampilkan nama pengguna, avatar, dan score.
 - Empty state untuk daftar thread atau komentar yang belum memiliki data.
+- Halaman fallback untuk route yang tidak ditemukan.
 
 ## Teknologi
 
@@ -75,6 +84,12 @@ Endpoint utama yang digunakan:
 
 Token autentikasi disimpan di browser supaya sesi pengguna dapat dipulihkan saat aplikasi dibuka kembali.
 
+## Akun dan Autentikasi
+
+Aplikasi menggunakan akun dari Dicoding Forum API. Pengguna baru dapat membuat akun melalui halaman registrasi, lalu login menggunakan email dan password yang sama. Setelah login berhasil, token akses disimpan di browser dan dipakai otomatis pada request yang membutuhkan autentikasi.
+
+Operasi publik dapat digunakan tanpa login, seperti membaca daftar thread, membaca detail thread, dan melihat leaderboard. Operasi yang mengubah data membutuhkan login, seperti membuat thread, membuat komentar, dan memberikan vote.
+
 ## Halaman
 
 | Route | Akses | Deskripsi |
@@ -98,6 +113,15 @@ Token autentikasi disimpan di browser supaya sesi pengguna dapat dipulihkan saat
 7. Setelah login, pengguna dapat memberi up-vote, down-vote, atau neutral-vote pada thread dan komentar.
 8. Pengguna dapat membuka halaman leaderboard untuk melihat kontributor dengan score tertinggi.
 9. Pengguna dapat logout melalui navigasi utama.
+
+## Validasi dan Perilaku Form
+
+| Form | Validasi / Perilaku |
+| --- | --- |
+| Registrasi | Mengirim nama, email, dan password ke Dicoding Forum API. Error API ditampilkan ke pengguna. |
+| Login | Menyimpan token setelah login berhasil, mengambil profil pengguna, lalu mengarahkan pengguna kembali ke halaman utama. |
+| Thread baru | Hanya tersedia untuk pengguna login. Data yang dikirim mencakup judul, kategori, dan body thread. |
+| Komentar | Hanya menampilkan textarea untuk pengguna login. Input komentar dipangkas sebelum dikirim dan dikosongkan setelah API berhasil menyimpan komentar. |
 
 ## Struktur Project
 
@@ -171,6 +195,14 @@ npm run e2e
 
 Perintah `npm run e2e` akan menjalankan Vite dev server terlebih dahulu, lalu menjalankan Cypress terhadap halaman login.
 
+## Kualitas Kode
+
+- Linting dijalankan dengan ESLint dan konfigurasi Airbnb.
+- React Strict Mode aktif untuk membantu mendeteksi potensi masalah saat pengembangan.
+- Komponen UI, halaman, slice Redux, service API, dan helper dipisahkan sesuai tanggung jawabnya.
+- Komponen tidak memanggil API secara langsung; akses data dilakukan melalui thunk dan service layer.
+- Test unit dan component menggunakan skenario yang eksplisit agar maksud pengujian mudah dipahami.
+
 ## CI/CD
 
 Continuous Integration tersedia di:
@@ -201,16 +233,17 @@ Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 
 Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan build dan deployment produksi ke Vercel.
 
-Untuk memenuhi berkas bukti submission v2, lampirkan screenshot berikut di ZIP submission setelah konfigurasi GitHub dan Vercel selesai dilakukan:
+URL production saat ini:
 
-- CI check error ketika pengujian gagal.
-- CI check pass ketika pengujian lolos.
-- Branch protection pada pull request.
-- URL Vercel aplikasi pada catatan submission.
+```text
+https://aplikasi-forum-diskusi-seven.vercel.app
+```
+
+Untuk kebutuhan review, pastikan bukti CI gagal, CI berhasil, branch protection, dan URL production Vercel sudah tersedia sebelum project dikumpulkan.
 
 ## Menjalankan Project
 
-Pastikan Node.js dan npm sudah tersedia.
+Pastikan Node.js dan npm sudah tersedia. Workflow CI project ini menggunakan Node.js 24, sehingga versi tersebut direkomendasikan untuk menyamakan perilaku lokal dengan CI.
 
 Instal dependency:
 
@@ -242,7 +275,7 @@ Periksa kualitas kode:
 npm run lint
 ```
 
-Menjalankan pengujian otomatis:
+Jalankan pengujian otomatis:
 
 ```bash
 npm test
