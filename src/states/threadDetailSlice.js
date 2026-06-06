@@ -80,6 +80,9 @@ const threadDetailSlice = createSlice({
       .addCase(addComment.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(voteComment.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });

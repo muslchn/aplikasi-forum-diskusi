@@ -60,6 +60,9 @@ const threadsSlice = createSlice({
       .addCase(addThread.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message;
+      })
+      .addCase(voteThread.rejected, (state, action) => {
+        state.error = action.error.message;
       });
   },
 });

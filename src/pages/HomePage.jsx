@@ -11,6 +11,7 @@ import {
   setCategory,
   voteThread,
 } from '../states/threadsSlice';
+import { getVoteState } from '../utils';
 
 export default function HomePage() {
   const dispatch = useDispatch();
@@ -31,13 +32,20 @@ export default function HomePage() {
     ? threads
     : threads.filter((thread) => thread.category === category);
 
-  function handleVote(threadId, voteType) {
+  async function handleVote(threadId, voteType) {
     if (!user) {
       return;
     }
 
+    const thread = threads.find((item) => item.id === threadId);
+    const previousVoteType = thread ? getVoteState(thread, user.id) : 0;
+
     dispatch(applyThreadVote({ threadId, userId: user.id, voteType }));
-    dispatch(voteThread({ threadId, voteType }));
+    const result = await dispatch(voteThread({ threadId, voteType }));
+
+    if (voteThread.rejected.match(result)) {
+      dispatch(applyThreadVote({ threadId, userId: user.id, voteType: previousVoteType }));
+    }
   }
 
   return (

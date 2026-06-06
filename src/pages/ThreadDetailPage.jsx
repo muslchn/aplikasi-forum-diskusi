@@ -15,6 +15,7 @@ import {
   voteComment,
 } from '../states/threadDetailSlice';
 import { applyThreadVote, voteThread } from '../states/threadsSlice';
+import { getVoteState } from '../utils';
 
 export default function ThreadDetailPage() {
   const { threadId } = useParams();
@@ -30,31 +31,50 @@ export default function ThreadDetailPage() {
     };
   }, [dispatch, threadId]);
 
-  function handleThreadVote(voteType) {
-    if (!user) {
+  async function handleThreadVote(voteType) {
+    if (!user || !thread) {
       return;
     }
+
+    const previousVoteType = getVoteState(thread, user.id);
 
     dispatch(applyDetailThreadVote({ userId: user.id, voteType }));
     dispatch(applyThreadVote({ threadId, userId: user.id, voteType }));
-    dispatch(voteThread({ threadId, voteType }));
+    const result = await dispatch(voteThread({ threadId, voteType }));
+
+    if (voteThread.rejected.match(result)) {
+      dispatch(applyDetailThreadVote({ userId: user.id, voteType: previousVoteType }));
+      dispatch(applyThreadVote({ threadId, userId: user.id, voteType: previousVoteType }));
+    }
   }
 
-  function handleCommentVote(commentId, voteType) {
-    if (!user) {
+  async function handleCommentVote(commentId, voteType) {
+    if (!user || !thread) {
       return;
     }
+
+    const comment = thread.comments.find((item) => item.id === commentId);
+    const previousVoteType = comment ? getVoteState(comment, user.id) : 0;
 
     dispatch(applyCommentVote({
       commentId,
       userId: user.id,
       voteType,
     }));
-    dispatch(voteComment({ threadId, commentId, voteType }));
+    const result = await dispatch(voteComment({ threadId, commentId, voteType }));
+
+    if (voteComment.rejected.match(result)) {
+      dispatch(applyCommentVote({
+        commentId,
+        userId: user.id,
+        voteType: previousVoteType,
+      }));
+    }
   }
 
-  function handleAddComment(content) {
-    dispatch(addComment({ threadId, content }));
+  async function handleAddComment(content) {
+    const result = await dispatch(addComment({ threadId, content }));
+    return addComment.fulfilled.match(result);
   }
 
   if (loading && !thread) {

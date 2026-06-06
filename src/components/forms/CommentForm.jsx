@@ -4,10 +4,13 @@ import { Link } from 'react-router-dom';
 export default function CommentForm({ isAuthenticated, loading, onSubmit }) {
   const [content, setContent] = useState('');
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    onSubmit(content);
-    setContent('');
+    const isSubmitted = await onSubmit(content.trim());
+
+    if (isSubmitted) {
+      setContent('');
+    }
   }
 
   if (!isAuthenticated) {
