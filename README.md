@@ -48,7 +48,7 @@ https://aplikasi-forum-diskusi-seven.vercel.app
 - Vite.
 - ESLint dengan Airbnb JavaScript Style Guide.
 - Vitest dan React Testing Library untuk unit/component testing.
-- Cypress untuk End-to-End testing.
+- Cypress 15 untuk End-to-End testing.
 - GitHub Actions untuk Continuous Integration.
 - Vercel untuk Continuous Deployment.
 - React Loading Skeleton sebagai React ecosystem tambahan untuk loading UI.
@@ -194,6 +194,8 @@ npm run e2e
 ```
 
 Perintah `npm run e2e` akan menjalankan Vite dev server terlebih dahulu, lalu menjalankan Cypress terhadap halaman login.
+
+Script E2E mengosongkan `ELECTRON_RUN_AS_NODE` sebelum menjalankan Cypress agar binary Electron Cypress dapat berjalan normal pada environment terminal yang menyetel variable tersebut. Konfigurasi Cypress juga menonaktifkan akses browser ke API environment Cypress karena test saat ini tidak membutuhkan pembacaan environment dari browser.
 
 ## Kualitas Kode
 
