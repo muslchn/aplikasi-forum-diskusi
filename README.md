@@ -4,9 +4,15 @@ Aplikasi Forum Diskusi adalah aplikasi React bertema forum komunitas yang menggu
 
 Project ini dibuat untuk memenuhi kriteria submission kelas **Membangun Aplikasi React dengan Redux**. Implementasinya memisahkan UI, state management, komunikasi API, utilitas, dan styling agar kode lebih mudah dirawat dan diperiksa.
 
-## Demo
+## Tautan Project
 
-Aplikasi dapat diakses melalui Vercel:
+Repository GitHub:
+
+```text
+https://github.com/muslchn/aplikasi-forum-diskusi
+```
+
+Deployment Vercel:
 
 ```text
 https://aplikasi-forum-diskusi-seven.vercel.app
