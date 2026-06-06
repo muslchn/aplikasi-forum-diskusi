@@ -225,6 +225,14 @@ Continuous Deployment ke Vercel tersedia di:
 .github/workflows/vercel-production.yml
 ```
 
+Konfigurasi Vercel berada di:
+
+```text
+vercel.json
+```
+
+Project mematikan auto-deploy bawaan Vercel Git Integration melalui `git.deploymentEnabled: false`. Dengan begitu, deployment production tidak berjalan paralel dengan CI; deployment resmi dilakukan oleh GitHub Actions setelah workflow CI selesai dengan status sukses. File konfigurasi ini juga menyediakan rewrite untuk React Router agar route aplikasi tetap dapat dibuka langsung di Vercel.
+
 Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 
 - `VERCEL_TOKEN`
