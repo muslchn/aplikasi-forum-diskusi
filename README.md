@@ -231,7 +231,7 @@ Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan build dan deployment produksi ke Vercel.
+Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan workflow CI terlebih dahulu. Jika CI selesai dengan status sukses, workflow deployment akan berjalan, mengulang pemeriksaan penting, melakukan build dengan Vercel CLI terbaru, lalu mengirim hasil build ke production Vercel.
 
 URL production saat ini:
 
