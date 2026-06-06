@@ -1,42 +1,105 @@
 name: Continuous Deployment
 
 on:
-  workflow_run:
-    workflows:
-      - Continuous Integration
-    types:
-      - completed
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
   contents: read
+  actions: read
+  checks: read
 
 concurrency:
-  group: vercel-production-${{ github.event.workflow_run.head_branch || github.ref_name }}
+  group: vercel-production-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
+  wait-for-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Skip wait on manual dispatch
+        if: github.event_name == 'workflow_dispatch'
+        run: echo "Manual deployment dispatch skips waiting for a push CI run."
+
+      - name: Wait for Continuous Integration
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          HEAD_SHA: ${{ github.sha }}
+          WORKFLOW_NAME: Continuous Integration
+        run: |
+          set -euo pipefail
+
+          for attempt in {1..60}; do
+            status=$(
+              gh run list \
+                --repo "$REPOSITORY" \
+                --workflow "$WORKFLOW_NAME" \
+                --commit "$HEAD_SHA" \
+                --event push \
+                --limit 1 \
+                --json status \
+                --jq '.[0].status // ""'
+            )
+
+            if [ -z "$status" ]; then
+              echo "Continuous Integration run is not available yet. Attempt $attempt/60."
+              sleep 10
+              continue
+            fi
+
+            conclusion=$(
+              gh run list \
+                --repo "$REPOSITORY" \
+                --workflow "$WORKFLOW_NAME" \
+                --commit "$HEAD_SHA" \
+                --event push \
+                --limit 1 \
+                --json conclusion \
+                --jq '.[0].conclusion // ""'
+            )
+            url=$(
+              gh run list \
+                --repo "$REPOSITORY" \
+                --workflow "$WORKFLOW_NAME" \
+                --commit "$HEAD_SHA" \
+                --event push \
+                --limit 1 \
+                --json url \
+                --jq '.[0].url // ""'
+            )
+
+            echo "Continuous Integration status: $status, conclusion: ${conclusion:-pending}"
+            echo "Continuous Integration URL: $url"
+
+            if [ "$status" = "completed" ] && [ "$conclusion" = "success" ]; then
+              exit 0
+            fi
+
+            if [ "$status" = "completed" ]; then
+              echo "Continuous Integration finished with conclusion: $conclusion"
+              exit 1
+            fi
+
+            sleep 10
+          done
+
+          echo "Timed out waiting for Continuous Integration to finish."
+          exit 1
+
   deploy-to-vercel:
-    if: >-
-      ${{
-        github.event_name == 'workflow_dispatch' ||
-        (
-          github.event.workflow_run.conclusion == 'success' &&
-          github.event.workflow_run.event == 'push' &&
-          (
-            github.event.workflow_run.head_branch == 'master' ||
-            github.event.workflow_run.head_branch == 'main'
-          )
-        )
-      }}
+    needs: wait-for-ci
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     environment: production
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4

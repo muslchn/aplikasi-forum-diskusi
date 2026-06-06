@@ -221,6 +221,8 @@ Workflow CI menjalankan:
 - `npm run build`
 - `npm run e2e`
 
+Branch utama project ini adalah `main`. Workflow CI berjalan pada pull request ke `main` dan push ke `main`.
+
 Continuous Deployment ke Vercel tersedia di workflow terpisah:
 
 ```text
@@ -233,7 +235,7 @@ Konfigurasi Vercel berada di:
 vercel.json
 ```
 
-Project mematikan auto-deploy bawaan Vercel Git Integration melalui `git.deploymentEnabled: false`. Dengan begitu, deployment production tidak berjalan paralel dengan CI; deployment resmi dilakukan oleh workflow `Continuous Deployment` setelah workflow `Continuous Integration` selesai dengan status sukses. File konfigurasi ini juga menyediakan rewrite untuk React Router agar route aplikasi tetap dapat dibuka langsung di Vercel.
+Project mematikan auto-deploy bawaan Vercel Git Integration melalui `git.deploymentEnabled: false`. Dengan begitu, deployment production tidak berjalan melalui check bawaan Vercel; deployment resmi dilakukan oleh workflow `Continuous Deployment`. Workflow ini muncul sebagai check terpisah pada push ke `main`, menunggu workflow `Continuous Integration` untuk commit yang sama selesai dengan status sukses, lalu menjalankan deployment. File konfigurasi ini juga menyediakan rewrite untuk React Router agar route aplikasi tetap dapat dibuka langsung di Vercel.
 
 Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 
@@ -241,7 +243,7 @@ Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan workflow `Continuous Integration` terlebih dahulu. Jika workflow tersebut sukses, workflow `Continuous Deployment` akan berjalan, mengulang pemeriksaan penting, melakukan build dengan Vercel CLI terbaru, lalu mengirim hasil build ke production Vercel. Pull request tetap hanya menjalankan pemeriksaan CI tanpa deployment production.
+Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke `main` akan menampilkan check `Continuous Integration` dan `Continuous Deployment`. Workflow deployment menunggu hasil CI untuk commit yang sama; jika CI sukses, workflow deployment mengulang pemeriksaan penting, melakukan build dengan Vercel CLI terbaru, lalu mengirim hasil build ke production Vercel. Pull request tetap hanya menjalankan pemeriksaan CI tanpa deployment production.
 
 URL production saat ini:
 
