@@ -31,6 +31,10 @@ module.exports = {
         devDependencies: [
           '**/*.config.js',
           '**/*.config.cjs',
+          '**/*.test.js',
+          '**/*.test.jsx',
+          'src/test/**/*.js',
+          'cypress/**/*.js',
           'vite.config.js',
         ],
       },
@@ -60,6 +64,26 @@ module.exports = {
       files: ['vite.config.js'],
       rules: {
         'import/no-unresolved': 'off',
+      },
+    },
+    {
+      files: ['**/*.test.js', '**/*.test.jsx'],
+      env: {
+        node: true,
+      },
+    },
+    {
+      files: ['cypress/**/*.js'],
+      env: {
+        browser: true,
+      },
+      globals: {
+        cy: 'readonly',
+        describe: 'readonly',
+        it: 'readonly',
+      },
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
       },
     },
   ],

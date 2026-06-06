@@ -38,6 +38,11 @@ Project ini dibuat untuk memenuhi kriteria submission kelas **Membangun Aplikasi
 - React Router.
 - Vite.
 - ESLint dengan Airbnb JavaScript Style Guide.
+- Vitest dan React Testing Library untuk unit/component testing.
+- Cypress untuk End-to-End testing.
+- GitHub Actions untuk Continuous Integration.
+- Vercel untuk Continuous Deployment.
+- React Loading Skeleton sebagai React ecosystem tambahan untuk loading UI.
 - CSS global tanpa UI framework tambahan.
 
 ## Sumber Data
@@ -137,6 +142,71 @@ Pemanggilan REST API dipusatkan di `src/services/api.js`. Komponen tidak memangg
 - Vote memakai optimistic UI dan dikembalikan ke state sebelumnya jika request gagal.
 - Form komentar hanya dikosongkan setelah komentar berhasil terkirim.
 - Body thread dan komentar dari API dirender sebagai HTML sesuai format data API.
+- Loading indicator memanfaatkan `react-loading-skeleton` sebagai salah satu React ecosystem tambahan di luar tool yang dikecualikan pada kriteria submission.
+
+## Automation Testing
+
+Project menyediakan automation testing untuk memenuhi submission v2.
+
+| Jenis Pengujian | Lokasi | Cakupan |
+| --- | --- | --- |
+| Reducer test | `src/states/threadsSlice.test.js` dan `src/states/threadDetailSlice.test.js` | Perubahan kategori, vote thread, clear detail, vote detail thread, dan vote komentar. |
+| Thunk test | `src/states/thunks.test.js` | Login, pemulihan sesi tanpa token, fetch daftar thread, dan error vote thread. |
+| Component test | `src/components/**/*.test.jsx` | Loading indicator, category filter, thread item, dan comment form. |
+| End-to-End test | `cypress/e2e/login.cy.js` | Alur login pengguna dengan response API yang di-mock. |
+
+Setiap file pengujian menggunakan penamaan skenario pada test case agar tujuan pengujian mudah dibaca saat review.
+
+Jalankan unit, thunk, dan component test:
+
+```bash
+npm test
+```
+
+Jalankan End-to-End test:
+
+```bash
+npm run e2e
+```
+
+Perintah `npm run e2e` akan menjalankan Vite dev server terlebih dahulu, lalu menjalankan Cypress terhadap halaman login.
+
+## CI/CD
+
+Continuous Integration tersedia di:
+
+```text
+.github/workflows/ci.yml
+```
+
+Workflow CI menjalankan:
+
+- `npm ci`
+- `npm run lint`
+- `npm test`
+- `npm run build`
+- `npm run e2e`
+
+Continuous Deployment ke Vercel tersedia di:
+
+```text
+.github/workflows/vercel-production.yml
+```
+
+Workflow deployment membutuhkan secrets berikut pada repository GitHub:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
+
+Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan build dan deployment produksi ke Vercel.
+
+Untuk memenuhi berkas bukti submission v2, lampirkan screenshot berikut di ZIP submission setelah konfigurasi GitHub dan Vercel selesai dilakukan:
+
+- CI check error ketika pengujian gagal.
+- CI check pass ketika pengujian lolos.
+- Branch protection pada pull request.
+- URL Vercel aplikasi pada catatan submission.
 
 ## Menjalankan Project
 
@@ -172,6 +242,13 @@ Periksa kualitas kode:
 npm run lint
 ```
 
+Menjalankan pengujian otomatis:
+
+```bash
+npm test
+npm run e2e
+```
+
 ## Review Mandiri
 
 Sebelum dikumpulkan, pemeriksaan berikut dapat digunakan:
@@ -182,10 +259,15 @@ Sebelum dikumpulkan, pemeriksaan berikut dapat digunakan:
 | Bugs highlighting | ESLint tersedia, Airbnb style guide digunakan, lint dapat dijalankan melalui `npm run lint`, dan React Strict Mode aktif. |
 | Arsitektur aplikasi | State API dikelola di Redux, REST API dipusatkan di service, folder UI dan state terpisah, dan komponen dibuat modular. |
 | Fitur unggulan | Vote thread/komentar, leaderboard, dan filter kategori tersedia. |
+| Automation testing | Reducer, thunk, component, dan E2E login test tersedia. |
+| CI/CD | GitHub Actions CI dan workflow deployment Vercel tersedia. |
+| React ecosystem | `react-loading-skeleton` digunakan pada loading indicator. |
 
 Perintah verifikasi yang disarankan:
 
 ```bash
 npm run lint
+npm test
 npm run build
+npm run e2e
 ```

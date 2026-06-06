@@ -333,9 +333,14 @@ button:disabled {
 .loading {
   display: inline-flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 10px;
   color: var(--muted);
   font-weight: 700;
+}
+
+.loading__skeleton {
+  width: min(360px, 70vw);
 }
 
 .spinner {
