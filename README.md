@@ -221,7 +221,11 @@ Workflow CI menjalankan:
 - `npm run build`
 - `npm run e2e`
 
-Continuous Deployment ke Vercel tersedia sebagai job `deploy-to-vercel` di workflow yang sama.
+Continuous Deployment ke Vercel tersedia di workflow terpisah:
+
+```text
+.github/workflows/vercel-production.yml
+```
 
 Konfigurasi Vercel berada di:
 
@@ -229,7 +233,7 @@ Konfigurasi Vercel berada di:
 vercel.json
 ```
 
-Project mematikan auto-deploy bawaan Vercel Git Integration melalui `git.deploymentEnabled: false`. Dengan begitu, deployment production tidak berjalan paralel dengan CI; deployment resmi dilakukan oleh job `deploy-to-vercel` setelah job `automation-test-job` selesai dengan status sukses. File konfigurasi ini juga menyediakan rewrite untuk React Router agar route aplikasi tetap dapat dibuka langsung di Vercel.
+Project mematikan auto-deploy bawaan Vercel Git Integration melalui `git.deploymentEnabled: false`. Dengan begitu, deployment production tidak berjalan paralel dengan CI; deployment resmi dilakukan oleh workflow `Continuous Deployment` setelah workflow `Continuous Integration` selesai dengan status sukses. File konfigurasi ini juga menyediakan rewrite untuk React Router agar route aplikasi tetap dapat dibuka langsung di Vercel.
 
 Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 
@@ -237,7 +241,7 @@ Workflow deployment membutuhkan secrets berikut pada repository GitHub:
 - `VERCEL_ORG_ID`
 - `VERCEL_PROJECT_ID`
 
-Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan job `automation-test-job` terlebih dahulu. Jika job tersebut sukses, job `deploy-to-vercel` akan berjalan, mengulang pemeriksaan penting, melakukan build dengan Vercel CLI terbaru, lalu mengirim hasil build ke production Vercel. Pull request tetap hanya menjalankan pemeriksaan CI tanpa deployment production.
+Setelah repository dihubungkan dengan Vercel dan secrets diisi, push ke branch utama akan menjalankan workflow `Continuous Integration` terlebih dahulu. Jika workflow tersebut sukses, workflow `Continuous Deployment` akan berjalan, mengulang pemeriksaan penting, melakukan build dengan Vercel CLI terbaru, lalu mengirim hasil build ke production Vercel. Pull request tetap hanya menjalankan pemeriksaan CI tanpa deployment production.
 
 URL production saat ini:
 
