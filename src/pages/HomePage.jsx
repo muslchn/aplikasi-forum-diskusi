@@ -15,7 +15,12 @@ import { getVoteState } from '../utils';
 
 export default function HomePage() {
   const dispatch = useDispatch();
-  const { items: threads, category, loading, error } = useSelector((state) => state.threads);
+  const {
+    items: threads,
+    category,
+    loading,
+    error,
+  } = useSelector((state) => state.threads);
   const { items: users, loading: usersLoading } = useSelector((state) => state.users);
   const { user } = useSelector((state) => state.auth);
 

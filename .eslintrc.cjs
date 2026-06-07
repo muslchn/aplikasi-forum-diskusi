@@ -39,6 +39,11 @@ module.exports = {
         ],
       },
     ],
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/jsx-no-bind': 'off',
+    'react/jsx-one-expression-per-line': 'off',
+    'react/no-danger': 'off',
     'react/function-component-definition': [
       'error',
       {

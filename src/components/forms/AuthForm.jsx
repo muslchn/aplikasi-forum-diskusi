@@ -11,6 +11,7 @@ export default function AuthForm({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const isRegister = type === 'register';
+  const submitLabel = isRegister ? 'Daftar' : 'Masuk';
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -58,7 +59,7 @@ export default function AuthForm({
         />
       </label>
       <button className="primary-button" type="submit" disabled={loading}>
-        {loading ? 'Memproses...' : isRegister ? 'Daftar' : 'Masuk'}
+        {loading ? 'Memproses...' : submitLabel}
       </button>
     </form>
   );

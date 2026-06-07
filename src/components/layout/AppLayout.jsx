@@ -1,4 +1,9 @@
-import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom';
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useNavigate,
+} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout } from '../../states/authSlice';
 

@@ -206,6 +206,7 @@ Script E2E mengosongkan `ELECTRON_RUN_AS_NODE` sebelum menjalankan Cypress agar 
 ## Kualitas Kode
 
 - Linting dijalankan dengan ESLint dan konfigurasi Airbnb.
+- Script lint memeriksa file `.js` dan `.jsx` sehingga komponen React ikut diaudit oleh ESLint.
 - React Strict Mode aktif untuk membantu mendeteksi potensi masalah saat pengembangan.
 - Komponen UI, halaman, slice Redux, service API, dan helper dipisahkan sesuai tanggung jawabnya.
 - Komponen tidak memanggil API secara langsung; akses data dilakukan melalui thunk dan service layer.
