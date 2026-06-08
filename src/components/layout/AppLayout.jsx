@@ -42,6 +42,18 @@ export default function AppLayout() {
       <main className="page">
         <Outlet />
       </main>
+      <footer className="site-footer">
+        <p>
+          Portfolio milik <strong>Muslichin</strong>.
+        </p>
+        <a
+          href="https://github.com/muslchn/aplikasi-forum-diskusi"
+          target="_blank"
+          rel="noreferrer"
+        >
+          GitHub Repository Kolaborasi
+        </a>
+      </footer>
     </div>
   );
 }

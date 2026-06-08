@@ -6,7 +6,13 @@ Project ini dibuat untuk memenuhi kriteria submission kelas **Membangun Aplikasi
 
 ## Tautan Project
 
-Repository GitHub:
+Pemilik portfolio:
+
+```text
+Muslichin
+```
+
+Repository GitHub untuk kolaborasi:
 
 ```text
 https://github.com/muslchn/aplikasi-forum-diskusi
@@ -17,6 +23,8 @@ Deployment Vercel:
 ```text
 https://aplikasi-forum-diskusi-seven.vercel.app
 ```
+
+Bukti kepemilikan portfolio juga ditampilkan langsung pada footer website production. Footer tersebut mencantumkan nama pemilik portfolio dan tautan repository GitHub agar reviewer atau kolaborator dapat mencocokkan website, deployment, dan sumber kode dari satu tempat.
 
 ## Fitur
 
